@@ -10,7 +10,7 @@ jobs:
       - checkout
       - aws-cli/setup:
           profile-name: oregon
-      - run: create.sh AWSLearnNetwork network.yml network-parameters.json
+      - run: /home/circleci/project/create.sh AWSLearnNetwork network.yml network-parameters.json
   wait_for_network:
     docker:
       - image: cimg/base:stable
@@ -22,7 +22,7 @@ jobs:
       - checkout
       - aws-cli/setup:
           profile-name: oregon
-      - run: create.sh AWSLearnServer server.yml server-parameters.json
+      - run: /home/circleci/project/create.sh AWSLearnServer server.yml server-parameters.json
 
 
 workflows:

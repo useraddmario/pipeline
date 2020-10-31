@@ -10,7 +10,7 @@ jobs:
       - checkout
       - aws-cli/setup:
           profile-name: oregon
-      - run: aws --version
+      - run: aws ec2 describe-instances
 
 workflows:
   version: 2

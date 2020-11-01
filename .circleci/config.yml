@@ -21,7 +21,7 @@ jobs:
           command:
             aws cloudformation deploy --stack-name $NETWORK_STACK_NAME --template-file $NETWORK_STACK_TEMPLATE --parameter-overrides file://$NETWORK_STACK_PARAMS
             
-            aws cloudformation wait stack-create-complete --stack-name $NETWORK_STACK_NAME
+            #            aws cloudformation wait stack-create-complete --stack-name $NETWORK_STACK_NAME
             #  deploy_server_tier:
             #    docker:
             #      - image: amazon/aws-cli

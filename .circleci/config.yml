@@ -3,16 +3,16 @@ version: 2.1
 workflows:
   deploy_workflow:
     jobs:
-      - deploy_network_tier:
-          context: aws
-      - deploy_server_tier:
-          context: aws
-          requires:
-            - deploy_network_tier
+      #- deploy_network_tier:
+      #    context: aws
+      #- deploy_server_tier:
+      #    context: aws
+      #    requires:
+      #      - deploy_network_tier
       - deploy_ansible_control:
           context: aws
-          requires:
-            - deploy_server_tier
+          #   requires:
+          #  - deploy_server_tier
 jobs:
   deploy_network_tier:
     docker:
@@ -46,6 +46,8 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             sudo unzip awscliv2.zip
             sudo bash ./aws/install
-            echo [ec2] >> inventory
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
-
+            sleep 1m
+            sudo echo [ec2] >> inventory
+            sudo aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
+            python -m pip install --user ansible
+            ansible-playbook main.yml -i inventory --limit ec2

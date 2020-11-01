@@ -9,7 +9,10 @@ workflows:
           context: aws
           requires:
             - deploy_network_tier
-
+      - deploy_ansible_control:
+          context: aws
+          requires:
+            - deploy_server_tier
 jobs:
   deploy_network_tier:
     docker:
@@ -29,3 +32,20 @@ jobs:
           name: "Server Infra Deploy"
           command:
             aws cloudformation deploy --stack-name $SERVER_STACK_NAME --template-file $SERVER_STACK_TEMPLATE --parameter-overrides file://$SERVER_STACK_PARAMS --capabilities CAPABILITY_IAM
+  deploy_ansible_control:
+    docker:
+      - image: cimg/python:3.9.0
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["9e:c4:ff:36:9e:ab:07:79:a5:24:20:fe:02:62:f8:2a"]
+      - run:
+          name: "Ansible control server install and playbook run"
+          command: |
+            cd /home/circleci/
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            sudo unzip awscliv2.zip
+            sudo bash ./aws/install
+            echo [ec2] >> inventory
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
+

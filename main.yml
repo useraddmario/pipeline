@@ -1,6 +1,6 @@
 ---
 - name: Exercise #1
-  hosts: localhost
+  hosts: ec2
 
   roles:
    - print

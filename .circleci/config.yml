@@ -9,8 +9,9 @@ jobs:
       - run: 
           name: Network Tier Deploy
           command: |
-            aws cloudformation deploy --stack-name $network-stack-name --template-file file://$network-stack-template --parameter-overrides file://$network-stack-params
-            aws cloudformation wait stack-create-complete --stack-name $network-stack-name
+            echo $network-stack-name
+            #aws cloudformation deploy --stack-name $network-stack-name --template-file file://$network-stack-template --parameter-overrides file://$network-stack-params
+            #aws cloudformation wait stack-create-complete --stack-name $network-stack-name
         #- run: aws cloudformation deploy --stack-name <<parameters.server-stack-name>> --template-file file://<<parameters.server-stack-template>> --parameter-overrides file://<<parameters.server-stack-params>>
         #- run: aws cloudformation wait stack-create-complete --stack-name <<parameters.server-stack-name>>
 

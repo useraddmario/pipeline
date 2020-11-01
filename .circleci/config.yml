@@ -31,6 +31,7 @@ jobs:
         #- run: aws cloudformation wait stack-create-complete --stack-name <<parameters.server-stack-name>>
 
 workflows:
+  deploy_infra_wf:
     jobs:
       - deploy_infra:
           context: aws

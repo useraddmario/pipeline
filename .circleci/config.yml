@@ -5,10 +5,10 @@ workflows:
     jobs:
       - deploy_network_tier:
           context: aws
-      - deploy_server_tier:
-          context: aws
-          requires:
-            - deploy_network_tier
+          #      - deploy_server_tier:
+          #          context: aws
+          #          requires:
+          #            - deploy_network_tier
 
 jobs:
   deploy_network_tier:

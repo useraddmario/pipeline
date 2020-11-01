@@ -4,7 +4,7 @@
 		"ParameterValue": "AWSLearn"
 	},
     {
-		"ParameterKey": "LatestAmiId",
-		"ParameterValue": "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
+		"ParameterKey": "UbuntuImageId",
+		"ParameterValue": "ami-06e54d05255faf8f6"
     }
 ]

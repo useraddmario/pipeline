@@ -7,8 +7,8 @@ workflows:
           context: aws
       - deploy_server_tier:
           context: aws
-            requires:
-              - deploy_network_tier
+          requires:
+            - deploy_network_tier
 
 jobs:
   deploy_network_tier:

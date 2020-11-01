@@ -1,5 +1,10 @@
 version: 2.1
 
+workflows:
+  deploy_infra_wf:
+    jobs:
+      - deploy_infra:
+          context: aws
 jobs:
   deploy_infra:
     docker:
@@ -30,8 +35,3 @@ jobs:
         #- run: aws cloudformation deploy --stack-name <<parameters.server-stack-name>> --template-file file://<<parameters.server-stack-template>> --parameter-overrides file://<<parameters.server-stack-params>>
         #- run: aws cloudformation wait stack-create-complete --stack-name <<parameters.server-stack-name>>
 
-workflows:
-  deploy_infra_wf:
-    jobs:
-      - deploy_infra:
-          context: aws

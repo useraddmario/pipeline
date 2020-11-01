@@ -1,33 +1,15 @@
 version: 2.1
 
 workflows:
-  deploy_infra_wf:
+  deploy_workflow:
     jobs:
       - deploy_infra:
-          context: aws
+          context: 
+            - aws
 jobs:
   deploy_infra:
     docker:
       - image: amazon/aws-cli
-    parameters:
-      network-stack-name:
-        description: The CloudFormation stack name as identified inside AWS.
-        type: string
-      server-stack-name:
-        description: The CloudFormation stack name as identified inside AWS.
-        type: string
-      network-stack-template:
-        description: The CloudFormation network stack template.
-        type: string
-      server-stack-template:
-        description: The CloudFormation server stack template.
-        type: string
-      network-stack-params:
-        description: The CloudFormation network stack parameters file.
-        type: string
-      server-stack-params:
-        description: The CloudFormation server stack parameters file.
-        type: string
     steps:
       - checkout
       - run: aws cloudformation deploy --stack-name $network-stack-name --template-file file://$network-stack-template --parameter-overrides file://$network-stack-params

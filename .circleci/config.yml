@@ -4,7 +4,8 @@ workflows:
   deploy_infra_wf:
     jobs:
       - deploy_infra:
-          context: aws
+          context: 
+           - aws
 jobs:
   deploy_infra:
     docker:
@@ -30,8 +31,8 @@ jobs:
         type: string
     steps:
       - checkout
-      - run: aws cloudformation deploy --stack-name <<parameters.network-stack-name>> --template-file file://<<parameters.network-stack-template>> --parameter-overrides file://<<parameters.network-stack-params>>
-      - run: aws cloudformation wait stack-create-complete --stack-name <<parameters.network-stack-name>>
+      - run: aws cloudformation deploy --stack-name $network-stack-name --template-file file://$network-stack-template --parameter-overrides file://$network-stack-params
+      - run: aws cloudformation wait stack-create-complete --stack-name $network-stack-name
         #- run: aws cloudformation deploy --stack-name <<parameters.server-stack-name>> --template-file file://<<parameters.server-stack-template>> --parameter-overrides file://<<parameters.server-stack-params>>
         #- run: aws cloudformation wait stack-create-complete --stack-name <<parameters.server-stack-name>>
 

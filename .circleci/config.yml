@@ -46,8 +46,8 @@ jobs:
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             sudo unzip awscliv2.zip
             sudo bash ./aws/install
-            echo [ec2] >> inventory
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text --region=us-west-2 >> inventory
-            python -m pip install --user ansible
             cd /home/circleci/project
+            echo [ec2] >> inventory
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
+            python -m pip install --user ansible
             ansible-playbook main.yml -i inventory --limit ec2

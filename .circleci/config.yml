@@ -1,41 +1,36 @@
 version: 2.1
 
-orbs:
-  aws-cli: circleci/aws-cli@1.3.0
-
 jobs:
-  deploy_network:
-    executor: aws-cli/default
-    steps:
-      - checkout
-      - aws-cli/setup:
-          profile-name: oregon
-      - run: /home/circleci/project/create.sh AWSLearnNetwork network.yml network-parameters.json
-  wait_for_network:
+  deploy_infra:
     docker:
-      - image: cimg/base:stable
-    steps:
-      - run: sleep 5m
-  deploy_server:
-    executor: aws-cli/default
+      - image: amazon/aws-cli
+    parameters:
+      network-stack-name:
+        description: The CloudFormation stack name as identified inside AWS.
+        type: string
+      server-stack-name:
+        description: The CloudFormation stack name as identified inside AWS.
+        type: string
+      network-stack-template:
+        description: The CloudFormation network stack template.
+        type: string
+      server-stack-template:
+        description: The CloudFormation server stack template.
+        type: string
+      network-stack-params:
+        description: The CloudFormation network stack parameters file.
+        type: string
+      server-stack-params:
+        description: The CloudFormation server stack parameters file.
+        type: string
     steps:
       - checkout
-      - aws-cli/setup:
-          profile-name: oregon
-      - run: /home/circleci/project/create.sh AWSLearnServer server.yml server-parameters.json
-
+      - run: aws cloudformation deploy --stack-name <<parameters.network-stack-name>> --template-file file://<<parameters.network-stack-template>> --parameter-overrides file://<<parameters.network-stack-params>>
+      - run: aws cloudformation wait stack-create-complete --stack-name <<parameters.network-stack-name>>
+        #- run: aws cloudformation deploy --stack-name <<parameters.server-stack-name>> --template-file file://<<parameters.server-stack-template>> --parameter-overrides file://<<parameters.server-stack-params>>
+        #- run: aws cloudformation wait stack-create-complete --stack-name <<parameters.server-stack-name>>
 
 workflows:
-  version: 2
-  aws-cli:
     jobs:
-      - deploy_network:
+      - deploy_infra:
           context: aws
-      - wait_for_network:
-          requires:
-            - deploy_network
-      - deploy_server:
-          context: aws
-          requires:
-            - wait_for_network
-

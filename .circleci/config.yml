@@ -48,6 +48,6 @@ jobs:
             sudo bash ./aws/install
             sleep 3m
             sudo echo [ec2] >> inventory
-            sudo aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
+            sudo aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text --region=us-west-2 >> inventory
             python -m pip install --user ansible
             ansible-playbook main.yml -i inventory --limit ec2

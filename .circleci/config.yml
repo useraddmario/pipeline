@@ -19,7 +19,6 @@ jobs:
       - run:
           name: "Network Infra Deploy"
           command:
-            echo $NETWORK_STACK_NAME
             aws cloudformation deploy --stack-name $NETWORK_STACK_NAME --template-file file://$NETWORK_STACK_TEMPLATE --parameter-overrides file://$NETWORK_STACK_PARAMS
             
             aws cloudformation wait stack-create-complete --stack-name $NETWORK_STACK_NAME

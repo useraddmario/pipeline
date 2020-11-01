@@ -19,8 +19,7 @@ jobs:
       - run:
           name: "Network Infra Deploy"
           command:
-            aws cloudformation deploy --stack-name $NETWORK_STACK_NAME --template-file $NETWORK_STACK_TEMPLATE --parameter-overrides file://$NETWORK_STACK_PARAMS
-            
+            aws cloudformation deploy --stack-name $NETWORK_STACK_NAME --template-file $NETWORK_STACK_TEMPLATE --parameter-overrides file://$NETWORK_STACK_PARAMS            
   deploy_server_tier:
     docker:
       - image: amazon/aws-cli

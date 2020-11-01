@@ -4,8 +4,7 @@ workflows:
   deploy_workflow:
     jobs:
       - deploy_infra:
-          context: 
-            - aws
+          context: aws
 jobs:
   deploy_infra:
     docker:

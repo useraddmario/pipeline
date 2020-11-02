@@ -54,7 +54,7 @@ jobs:
             echo [ec2] >> inventory
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
             python -m pip install --user ansible
-            ansible-playbook playbook.yml -i inventory -u ubuntu
+            ansible-playbook playbook.yml
       - save_cache:
           key: "checkedout"
           paths:

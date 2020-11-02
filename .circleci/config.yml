@@ -54,17 +54,16 @@ jobs:
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
             python -m pip install --user ansible
             ansible-playbook playbook.yml
-      - save_cache:
-          key: "checkedout"
+      - persist_to_workspace:
+          root: /home/circleci
           paths:
-            - /home/circleci/project
+            - project
   smoke_test:
     docker:
       - image: cimg/python:3.9.0
     steps:
-      - restore_cache:
-          keys:
-            - "checkedout"
+      - attach_workspace:
+          at: /home/circleci
       - run:
           name: "Simple smoke test"
           command: |

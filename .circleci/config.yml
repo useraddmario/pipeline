@@ -53,9 +53,9 @@ jobs:
             python -m pip install --user ansible
             ansible-playbook playbook.yml -i inventory -u ubuntu
       - save_cache:
-        key: "checkedout"
-        paths:
-          - /home/circleci/project
+          key: "checkedout"
+          paths:
+            - /home/circleci/project
 
   smoke_testing:
     docker:

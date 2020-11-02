@@ -17,7 +17,7 @@ Resources:
   WebSecGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Allow ssh/port 3000 to jumphost
+      GroupDescription: Allow ssh/http to webserver
       VpcId:
         Fn::ImportValue:
           !Sub "${EnvironmentName}-VPCID"
@@ -27,8 +27,8 @@ Resources:
         ToPort: 22
         CidrIp: 0.0.0.0/0
       - IpProtocol: tcp 
-        FromPort: 3000
-        ToPort: 3000
+        FromPort: 80
+        ToPort: 80
         CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
       - IpProtocol: tcp 

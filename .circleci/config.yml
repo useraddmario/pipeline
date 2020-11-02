@@ -51,4 +51,27 @@ jobs:
             echo [ec2] >> inventory
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=AnsibleTesting" --output text >> inventory
             python -m pip install --user ansible
-            ansible-playbook playbook.yml -i inventory --limit ec2 -u ubuntu
+            ansible-playbook playbook.yml -i inventory -u ubuntu
+      - save_cache:
+        key: "checkedout"
+        paths:
+          - /home/circleci/project
+
+  smoke_testing:
+    docker:
+      - image: alpine:latest
+    steps:
+      - restore_cache:
+          keys:
+            - "checkedout"
+      - run:
+          name: "Simple smoke test"
+          command: |
+            cd /home/circleci/project/
+            IP=$(head -2 inventory | tail -1)
+            if curl -s --head "$IP"
+            then
+              echo "IT worked!"
+            else
+              echo "It failed"
+            fi

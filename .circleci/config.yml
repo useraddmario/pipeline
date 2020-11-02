@@ -70,11 +70,12 @@ jobs:
       - run:
           name: "Simple smoke test"
           command: |
+            apk add curl
             cd /home/circleci/project/
             IP=$(head -2 inventory | tail -1)
             if curl -s --head "$IP"
             then
-              echo "IT worked!"
+              exit 0
             else
-              echo "It failed"
+              exit 1
             fi

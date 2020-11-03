@@ -6,12 +6,14 @@ commands:
           name: Rollback network Infra
           command: |
             aws cloudformation delete-stack --stack-name $NETWORK_STACK_NAME
+          when: on_fail
   rollback_server_tier:
     steps:
       - run:
           name: Rollback server Infra
           command: |
             aws cloudformation delete-stack --stack-name $SERVER_STACK_NAME
+          when: on_fail
 workflows:
   deploy_workflow:
     jobs:
@@ -48,8 +50,6 @@ jobs:
           name: "Server Infra Deploy"
           command:
             aws cloudformation deploy --stack-name $SERVER_STACK_NAME --template-file $SERVER_STACK_TEMPLATE --parameter-overrides file://$SERVER_STACK_PARAMS --capabilities CAPABILITY_IAM
-      - rollback_network_tier
-        when: on_fail
   deploy_ansible_control:
     docker:
       - image: cimg/python:3.9.0
@@ -73,10 +73,6 @@ jobs:
           root: /home/circleci
           paths:
             - project
-      - rollback_server_tier
-          when: on_fail
-      - rollback_network_tier
-          when: on_fail
   smoke_test:
     docker:
       - image: amazon/aws-cli
@@ -95,6 +91,4 @@ jobs:
               exit 1
             fi
       - rollback_server_tier
-          when: on_fail
       - rollback_network_tier
-          when: on_fail

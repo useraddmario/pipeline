@@ -78,7 +78,7 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
-      - run: yum -y install tar #needed to attach_workspace
+      - run: yum -y install tar less gzip #needed to attach_workspace
       - attach_workspace:
           at: /home/circleci
       - run:

@@ -40,7 +40,7 @@ jobs:
           command:
             aws cloudformation deploy --stack-name $NETWORK_STACK_NAME --template-file $NETWORK_STACK_TEMPLATE --parameter-overrides file://$NETWORK_STACK_PARAMS
       - rollback_network_tier
-        when: on_fail
+          when: on_fail
   deploy_server_tier:
     docker:
       - image: amazon/aws-cli
@@ -50,6 +50,8 @@ jobs:
           name: "Server Infra Deploy"
           command:
             aws cloudformation deploy --stack-name $SERVER_STACK_NAME --template-file $SERVER_STACK_TEMPLATE --parameter-overrides file://$SERVER_STACK_PARAMS --capabilities CAPABILITY_IAM
+      - rollback_network_tier
+          when: on_fail
   deploy_ansible_control:
     docker:
       - image: cimg/python:3.9.0
@@ -74,9 +76,9 @@ jobs:
           paths:
             - project
       - rollback_server_tier
-        when: on_fail
+          when: on_fail
       - rollback_server_tier
-        when: on_fail
+          when: on_fail
   smoke_test:
     docker:
       - image: amazon/aws-cli
@@ -95,6 +97,6 @@ jobs:
               exit 1
             fi
       - rollback_server_tier
-        when: on_fail
+          when: on_fail
       - rollback_network_tier
-        when: on_fail
+          when: on_fail

@@ -1,4 +1,17 @@
 version: 2.1
+commands:
+  rollback_network_tier:
+    steps:
+      - run:
+          name: Rollback network Infra
+          command: |
+            aws cloudformation delete-stack --stack-name $NETWORK_STACK_NAME
+  rollback_server_tier:
+    steps:
+      - run:
+          name: Rollback server Infra
+          command: |
+            aws cloudformation delete-stack --stack-name $SERVER_STACK_NAME
 workflows:
   deploy_workflow:
     jobs:
@@ -25,7 +38,9 @@ jobs:
       - run:
           name: "Network Infra Deploy"
           command:
-            aws cloudformation deploy --stack-name $NETWORK_STACK_NAME --template-file $NETWORK_STACK_TEMPLATE --parameter-overrides file://$NETWORK_STACK_PARAMS            
+            aws cloudformation deploy --stack-name $NETWORK_STACK_NAME --template-file $NETWORK_STACK_TEMPLATE --parameter-overrides file://$NETWORK_STACK_PARAMS
+      - rollback_network_tier
+        when: on_fail
   deploy_server_tier:
     docker:
       - image: amazon/aws-cli
@@ -58,9 +73,13 @@ jobs:
           root: /home/circleci
           paths:
             - project
+      - rollback_server_tier
+        when: on_fail
+      - rollback_server_tier
+        when: on_fail
   smoke_test:
     docker:
-      - image: cimg/python:3.9.0
+      - image: amazon/aws-cli
     steps:
       - attach_workspace:
           at: /home/circleci
@@ -69,9 +88,13 @@ jobs:
           command: |
             cd /home/circleci/project/
             IP=$(head -2 inventory | tail -1)
-            if [ "$(curl -s -o /dev/null -w "%{http_code}" "$IP")"  == "200" ] 
+            if [ "$(curl -s -o /dev/null -w "%{http_code}" "$IP")"  == "404" ] 
             then
               exit 0
             else
               exit 1
             fi
+      - rollback_server_tier
+        when: on_fail
+      - rollback_network_tier
+        when: on_fail

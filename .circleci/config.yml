@@ -29,6 +29,7 @@ workflows:
           requires:
             - deploy_server_tier
       - smoke_test:
+          context: aws
           requires:
             - deploy_ansible_control
 jobs:
@@ -77,6 +78,7 @@ jobs:
     docker:
       - image: amazon/aws-cli
     steps:
+      - run: yum -y install tar #needed to attach_workspace
       - attach_workspace:
           at: /home/circleci
       - run:

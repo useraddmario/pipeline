@@ -16,6 +16,12 @@ commands:
             aws cloudformation delete-stack --stack-name $SERVER_STACK_NAME
             aws cloudformation wait stack-delete-complete --stack-name $SERVER_STACK_NAME
           when: on_fail
+  fail_switch:
+    steps:
+      - run:
+          name: Deployment failure switch
+          command: |
+            exit 1
 workflows:
   deploy_workflow:
     jobs:
@@ -53,6 +59,7 @@ jobs:
           name: "Server Infra Deploy"
           command:
             aws cloudformation deploy --stack-name $SERVER_STACK_NAME --template-file $SERVER_STACK_TEMPLATE --parameter-overrides file://$SERVER_STACK_PARAMS --capabilities CAPABILITY_IAM
+      - fail_switch
       - rollback_network_tier
   deploy_ansible_control:
     docker:

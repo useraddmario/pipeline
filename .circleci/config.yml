@@ -48,8 +48,7 @@ jobs:
           name: "Server Infra Deploy"
           command:
             aws cloudformation deploy --stack-name $SERVER_STACK_NAME --template-file $SERVER_STACK_TEMPLATE --parameter-overrides file://$SERVER_STACK_PARAMS --capabilities CAPABILITY_IAM
-      - run
-          command: rollback_network_tier
+      - rollback_network_tier
           when: on_fail
   deploy_ansible_control:
     docker:
@@ -74,11 +73,9 @@ jobs:
           root: /home/circleci
           paths:
             - project
-      - run
-          command: rollback_server_tier
+      - rollback_server_tier
           when: on_fail
-      - run
-          command: rollback_network_tier
+      - rollback_network_tier
           when: on_fail
   smoke_test:
     docker:
@@ -97,9 +94,7 @@ jobs:
             else
               exit 1
             fi
-      - run
-          command: rollback_server_tier
+      - rollback_server_tier
           when: on_fail
-      - run
-          command: rollback_network_tier
+      - rollback_network_tier
           when: on_fail

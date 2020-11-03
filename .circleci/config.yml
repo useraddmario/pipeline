@@ -86,11 +86,9 @@ jobs:
           command: |
             cd /home/circleci/project/
             IP=$(head -2 inventory | tail -1)
-            if [ "$(curl -s -o /dev/null -w "%{http_code}" "$IP")"  == "404" ] 
+            if [ $(curl -s -o /dev/null -w "%{http_code}" $IP)  == "404" ] 
             then
               exit 0
             else
               exit 1
             fi
-      - rollback_server_tier
-      - rollback_network_tier

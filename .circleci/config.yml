@@ -106,6 +106,5 @@ jobs:
               echo "Website down, rollback initiated"
               exit 1
             fi
-      - fail_switch
       - rollback_server_tier
       - rollback_network_tier

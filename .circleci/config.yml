@@ -16,6 +16,12 @@ commands:
             aws cloudformation delete-stack --stack-name $SERVER_STACK_NAME
             aws cloudformation wait stack-delete-complete --stack-name $SERVER_STACK_NAME
           when: on_fail
+  fail_switch:
+    steps:
+      - run:
+          name: Deployment failure switch
+          command: |
+            return 1
 workflows:
   deploy_workflow:
     jobs:
@@ -99,5 +105,6 @@ jobs:
               echo "Website down, rollback initiated"
               exit 1
             fi
+      - fail_switch
       - rollback_server_tier
       - rollback_network_tier

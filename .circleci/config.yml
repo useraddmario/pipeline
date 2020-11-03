@@ -48,7 +48,8 @@ jobs:
           name: "Server Infra Deploy"
           command:
             aws cloudformation deploy --stack-name $SERVER_STACK_NAME --template-file $SERVER_STACK_TEMPLATE --parameter-overrides file://$SERVER_STACK_PARAMS --capabilities CAPABILITY_IAM
-      - rollback_network_tier
+      - run:
+          rollback_network_tier
           when: on_fail
   deploy_ansible_control:
     docker:

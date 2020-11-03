@@ -60,6 +60,7 @@ jobs:
           command:
             aws cloudformation deploy --stack-name $SERVER_STACK_NAME --template-file $SERVER_STACK_TEMPLATE --parameter-overrides file://$SERVER_STACK_PARAMS --capabilities CAPABILITY_IAM
       - fail_switch
+      - rollback_server_tier
       - rollback_network_tier
   deploy_ansible_control:
     docker:
